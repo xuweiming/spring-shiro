@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+         <!-- shiro-all.jar
+    filterChainDefinitions：apache
+    shiro通过filterChainDefinitions参数来分配链接的过滤，
+    资源过滤有常用的以下几个参数：
+    authc 表示需要认证的链接
+    perms[/url] 表示该链接需要拥有对应的资源/权限才能访问
+    roles[admin] 表示需要对应的角色才能访问
+    perms[admin:url] 表示需要对应角色的资源才能访问
+
+    -->
+         <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+             <property name="securityManager" ref="securityManager" /><property name="loginUrl" value="/toLogin" />
+             <property name="successUrl" value="/home" />
+            <property name="unauthorizedUrl" value="/403.do" />
+
+             <property name="filterChainDefinitions">
+                 <value>
+                     /toLogin = authc <!-- authc 表示需要认证才能访问的页面 -->
+                     /home = authc, perms[/home]  <!-- perms 表示需要该权限才能访问的页面 -->
+                 </value>
+            </property>
+         </bean>
+         <bean id="myShiroRealm" class="com.xu.shiro.shiro.realm.MyShiroRealm">
+             <!-- businessManager 用来实现用户名密码的查询 -->
+         </bean>
+         <!-- shiro-all.jar -->
+         <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+             <property name="realm" ref="myShiroRealm"></property>
+         </bean>
+</beans>
